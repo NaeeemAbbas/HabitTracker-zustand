@@ -1,0 +1,36 @@
+import { create } from "zustand";  
+import { devtools } from "zustand/middleware";
+
+export interface Habit {
+  id: string;
+  name: string;
+  frequency: "Daily" | "Weekly";
+  completedDates: string[];
+  createdAt: string;
+}
+
+interface HabitState {
+  habits: Habit[];
+  addHabit: (name: string, frequency: "Daily" | "Weekly") => void;
+}
+
+const useHabitStore = create<HabitState>()(
+  devtools((set) => ({
+    habits: [],
+    addHabit: (name, frequency) =>
+      set((state) => ({
+        habits: [
+          ...state.habits,
+          {
+            id: Date.now().toString(),
+            name,
+            frequency,
+            completedDates: [],
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      })),
+  }))
+);
+
+export default useHabitStore;
