@@ -9,7 +9,7 @@ const HabitList = () => {
     habits.map((habit) =>(
         <Paper>
 
-            hello
+            hello world
         </Paper>
     ))
     }
