@@ -1,4 +1,4 @@
-import { Box, Paper } from "@mui/material";
+import { Box, Grid, Paper } from "@mui/material";
 import useHabitStore from "../store/store";
 
 
@@ -7,9 +7,11 @@ const HabitList = () => {
   return <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mt: 2}}>
     {
     habits.map((habit) =>(
-        <Paper key={habit.id}  elevation={2}>
-          Hello this is chcek 11
-           
+        <Paper key={habit.id}  elevation={2} sx={{p:2}}>
+          <Grid container  alignItems="center">
+
+
+          </Grid>
         </Paper>
     ))
     }
