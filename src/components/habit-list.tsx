@@ -1,8 +1,9 @@
 import { Box, Grid, Paper, Typography, Button } from "@mui/material";
 import useHabitStore from "../store/store";
-
+import  CheckCircleIcon  from "@mui/icons-material/CheckCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
 const HabitList = () => {
-  const { habits } = useHabitStore();
+  const { habits, removeHabit } = useHabitStore();
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -22,13 +23,17 @@ const HabitList = () => {
                 <Button variant="outlined"
                 color={
                   habit.completedDates.includes(today) ? "success" : "primary"
-                }>
+                }
+                startIcon={<CheckCircleIcon/>}
+                >
 
                   {
                     habit.completedDates.includes(today) ? "Completed Today" : "Mark as Completed"
                   }
                 </Button>
-                <Button color="error" variant="outlined">Remove</Button>
+                <Button color="error" variant="outlined" startIcon={<DeleteIcon/>}
+                onClick={() => removeHabit(habit.id)}
+                >Remove</Button>
               </Box>
             </Grid>
           </Grid>
