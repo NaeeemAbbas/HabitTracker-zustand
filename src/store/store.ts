@@ -1,5 +1,5 @@
-import { create } from "zustand";  
-import { devtools } from "zustand/middleware";
+import { create } from "zustand";
+import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 export interface Habit {
   id: string;
@@ -13,30 +13,51 @@ interface HabitState {
   habits: Habit[];
   addHabit: (name: string, frequency: "Daily" | "Weekly") => void;
   removeHabit: (id: string) => void;
-  toggleHabit: (id:string, date:string) => void;
+  toggleHabit: (id: string, date: string) => void;
 }
 
 const useHabitStore = create<HabitState>()(
-  devtools((set) => ({
-    habits: [],
-    addHabit: (name, frequency) =>
-      set((state) => ({
-        habits: [
-          ...state.habits,
-          {
-            id: Date.now().toString(),
-            name,
-            frequency,
-            completedDates: [],
-            createdAt: new Date().toISOString(),
-          },
-        ],
+  devtools(
+    persist(
+      (set) => ({
+        habits: [],
+        addHabit: (name, frequency) =>
+          set((state) => ({
+            habits: [
+              ...state.habits,
+              {
+                id: Date.now().toString(),
+                name,
+                frequency,
+                completedDates: [],
+                createdAt: new Date().toISOString(),
+              },
+            ],
+          })),
+        removeHabit: (id) =>
+          set((state) => ({
+            habits: state.habits.filter((habit) => habit.id !== id),
+          })),
+        toggleHabit: (id, date) =>
+          set((state) => ({
+            habits: state.habits.map((habit) =>
+              habit.id === id
+                ? {
+                    ...habit,
+                    completedDates: habit.completedDates.includes(date)
+                      ? habit.completedDates.filter((d) => d !== date)
+                      : [...habit.completedDates, date],
+                  }
+                : habit
+            ),
+          })),
+      }),
+      {
+        name: "habit-storage", // key for localStorage
+        storage: createJSONStorage(() => localStorage), // persist in localStorage
       }
-    )),
-    removeHabit: (id) => set((state) =>({
-      habits: state.habits.filter((habit) => habit.id !== id)   
-    }))
-  }))
+    )
+  )
 );
 
 export default useHabitStore;

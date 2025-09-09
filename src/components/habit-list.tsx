@@ -3,7 +3,7 @@ import useHabitStore from "../store/store";
 import  CheckCircleIcon  from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 const HabitList = () => {
-  const { habits, removeHabit } = useHabitStore();
+  const { habits, removeHabit, toggleHabit } = useHabitStore();
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -21,6 +21,7 @@ const HabitList = () => {
             <Grid item xs={12} sm={6}>
               <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
                 <Button variant="outlined"
+                onClick={() => toggleHabit(habit.id, today)} 
                 color={
                   habit.completedDates.includes(today) ? "success" : "primary"
                 }
